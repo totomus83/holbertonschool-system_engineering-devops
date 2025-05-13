@@ -1,0 +1,50 @@
+[ User ] → Internet → [ DNS resolves www.foobar.com → 8.8.8.8 ]
+                            ↓
+                    ┌──────────────────────────┐
+                    │         SERVER           │ (IP: 8.8.8.8)
+                    │                          │
+                    │   ┌──────────────────┐   │
+                    │   │   Nginx Web      │   │  ← Web Server
+                    │   │     Server       │   │
+                    │   └──────────────────┘   │
+                    │           ↓              │
+                    │   ┌──────────────────┐   │
+                    │   │  Application     │   │  ← Application Server
+                    │   │     Server       │   │  (PHP, Python, etc.)
+                    │   └──────────────────┘   │
+                    │           ↓              │
+                    │   ┌──────────────────┐   │
+                    │   │     MySQL        │   │  ← Database
+                    │   │     Database     │   │
+                    │   └──────────────────┘   │
+                    └──────────────────────────┘
+
+
+Specifics about this infrastructure:
+
+
+Server: A physical or virtual machine that provides services to clients over a network.
+
+Domain Name (foobar.com): Human-readable address used to access the server. Easier to remember than IP addresses.
+
+DNS Record Type (A Record): The www is a subdomain. The A record maps it to an IPv4 address (8.8.8.8).
+
+Web Server (Nginx): Handles HTTP requests from the user’s browser, serves static files (HTML, CSS, JS), and forwards dynamic requests to the application server.
+
+Application Server: Executes application code (PHP, Python, Node.js) to process logic, generate dynamic content, and interact with the database.
+
+Application Files: The actual source code of the website (backend logic, frontend templates, etc.).
+
+Database (MySQL): Stores data such as user accounts, content, and app settings.
+
+Communication Protocol: The server communicates with the user’s computer using HTTP/HTTPS, transported via TCP/IP.
+
+
+Infrastructure Issues:
+
+
+Single Point of Failure (SPOF): If this one server goes down, the entire website is unavailable.
+
+Downtime During Maintenance: Updating code or restarting Nginx means the site is temporarily offline.
+
+Lack of Scalability: This setup can’t handle high traffic efficiently. More users can overload CPU, memory, and database.
