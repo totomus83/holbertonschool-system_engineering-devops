@@ -1,5 +1,7 @@
 [ User ] → Internet → [ DNS resolves www.foobar.com → 8.8.8.8 ]
-                            ↓
+
+
+    ↓
                     ┌──────────────────────────┐
                     │         SERVER           │ (IP: 8.8.8.8)
                     │                          │
