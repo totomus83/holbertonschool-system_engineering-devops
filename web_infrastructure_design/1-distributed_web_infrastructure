@@ -1,0 +1,65 @@
+[ User ] → Internet → [ DNS resolves www.foobar.com → 8.8.8.8 ]
+
+                                ↓
+
+                    ┌────────────────────────────┐
+                    │      LOAD BALANCER         │ (IP: 8.8.8.8)
+                    │                            │
+                    │        HAProxy             │
+                    │                            │
+                    └────────────┬───────────────┘
+                                 │
+               ┌────────────────┴────────────────┐
+               │                                 │
+   ┌──────────────────────────┐      ┌──────────────────────────┐
+   │         SERVER 1         │      │         SERVER 2         │
+   │      (IP: 10.0.0.1)      │      │      (IP: 10.0.0.2)      │
+   │                          │      │                          │
+   │   ┌──────────────────┐   │      │   ┌──────────────────┐   │
+   │   │   Nginx Web      │   │      │   │   Nginx Web      │   │  ← Web Server
+   │   │     Server       │   │      │   │     Server       │   │
+   │   └──────────────────┘   │      │   └──────────────────┘   │
+   │           ↓              │      │           ↓              │
+   │   ┌──────────────────┐   │      │   ┌──────────────────┐   │
+   │   │  Application     │   │      │   │  Application     │   │  ← Application Server
+   │   │     Server       │   │      │   │     Server       │   │
+   │   └──────────────────┘   │      │   └──────────────────┘   │
+   │           ↓              │      │           ↓              │
+   │   ┌──────────────────┐   │      │   ┌──────────────────┐   │
+   │   │      MySQL       │   │      │   │      MySQL       │   │
+   │   │    (Primary)     │   │      │   │     (Replica)    │   │  ← Database
+   │   └──────────────────┘   │      │   └──────────────────┘   │
+   └──────────────────────────┘      └──────────────────────────┘
+
+Specifics added to this infrastructure:
+
+1 load-balancer (HAproxy) : The load balancer acts as an intermediary between client devices and back-end servers, ensuring that requests are directed to the most appropriate server. This prevents some servers from remaining idle while others are overloaded, helping to ensure optimal resource usage.
+
+distribution algorithm: The distribution algorithm distribute the requests between the servers, it chekcs the states of the server and redirect the requests from the clients side to the server that is the least busy.
+
+Set up: Our server load balencer is using an Active-Active set up.
+
+Active-Active : both servers are active and receiving trafic, efficient for load sharing and performance.
+
+Active-Passive : Only one server is Active, the other remain passive, the passive server is on standby if needed or if the primary server fails.
+
+Primary Node : The primary node accept all read and write operations ( such as POST, PUT, GET and DELETE ).
+
+Replica Node : The replica node only accepts read operation ( such as GET ).
+
+
+Identifying the SPOF ( Single Points Of Failure )
+
+Load Balancer: If it goes down, no traffic reaches the backend.
+Primary MySQL Node: If it fails, the system can no longer handle write operations unless manual failover is implemented.
+No Shared File Storage: Application files must be manually synced or deployed to both servers.
+
+Identifying security issues
+
+No Firewall : All services are exposed to the internet, including database and internal app ports.
+
+No HTTPS: Traffic is unencrypted, allowing potential man-in-the-middle (MITM) attacks.
+
+Lack of Monitoring
+
+No system in place to: Monitor service health (e.g., CPU, memory, response time), and no alert on failures or downtime.
