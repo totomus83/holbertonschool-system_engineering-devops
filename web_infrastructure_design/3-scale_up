@@ -1,0 +1,35 @@
+[ User ] → Internet → [ DNS resolves www.foobar.com → 8.8.8.8 ]
+
+                 +-----------------------+
+                 |   Load Balancer       |
+                 |   (HAProxy Cluster)   |
+                 +-----------+-----------+
+                             |
+            +----------------+----------------+
+            |                                  |
+ +-------------------+              +-------------------+
+ |   Web Server 1    |              |   Web Server 2    |
+ |   (Nginx/Apache)  |              |   (Nginx/Apache)  |
+ +--------+----------+              +--------+----------+
+          |                                  |
+          +----------------------------------+
+                             |
+                 +-------------------------+
+                 |   Application Server    |
+                 |   (PHP, Python, etc.)   |
+                 +-----------+-------------+
+                             |
+                 +-------------------------+
+                 |    Database Server      |
+                 |    (MySQL, PostgreSQL)  |
+                 +-------------------------+
+
+By dedicating each server to a specific function, the system is better optimized for handling more traffic and performing more efficiently.
+
+The use of HAProxy in a cluster setup ensures that if one load balancer fails, the other can take over, minimizing downtime. Additionally, by separating the web, application, and database servers, failure in one component doesn't bring down the entire system.
+
+Each server can be scaled independently based on its specific load. If the application server starts to experience high load, we can scale it horizontally by adding more application servers without needing to scale the web or database servers.
+
+With isolated services, maintaining, updating, and scaling each component becomes easier. Each server has a single responsibility, making it simpler to manage and troubleshoot issues.
+
+The load balancer ensures that traffic is evenly distributed across the web servers, improving response times and system efficiency.
