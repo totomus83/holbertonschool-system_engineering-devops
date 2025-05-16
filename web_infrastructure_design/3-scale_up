@@ -1,27 +1,43 @@
-[ User ] → Internet → [ DNS resolves www.foobar.com → 8.8.8.8 ]
-
+                              User
+                                ↓
+                   ┌────────────────────┐
+                   │  Browser (Client)  │
+                   └────────────────────┘
+                                ↓
+                    Sends HTTP request to www.foobar.com
+                                ↓
+                        DNS Resolves Domain Name
+                                ↓
                  +-----------------------+
-                 |   Load Balancer       |
+                 |   Load Balancer       |   (IP: 8.8.8.8)
                  |   (HAProxy Cluster)   |
+                 |    Monitoring Agent   |
+                 |    SSL Termination    |
+                 |    ( SumoLogic )      |
+                 |  HAProxy HTTPS enabled|
                  +-----------+-----------+
                              |
             +----------------+----------------+
             |                                  |
  +-------------------+              +-------------------+
  |   Web Server 1    |              |   Web Server 2    |
- |   (Nginx/Apache)  |              |   (Nginx/Apache)  |
+ |   Firewall        |                   Firewall       |
+ |   (Nginx/Apache)                      (Nginx/Apache)
+    Monitoring Agent |              | Monitoring Agent  |
  +--------+----------+              +--------+----------+
           |                                  |
           +----------------------------------+
                              |
                  +-------------------------+
                  |   Application Server    |
-                 |   (PHP, Python, etc.)   |
+                 |   (PHP, Python, etc.) 
+                    Monitoring Agent  |
                  +-----------+-------------+
                              |
                  +-------------------------+
                  |    Database Server      |
-                 |    (MySQL, PostgreSQL)  |
+                 |    (MySQL, PostgreSQL)
+                      Monitoring Agent     |
                  +-------------------------+
 
 By dedicating each server to a specific function, the system is better optimized for handling more traffic and performing more efficiently.

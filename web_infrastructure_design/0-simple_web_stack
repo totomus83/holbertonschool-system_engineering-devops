@@ -1,7 +1,9 @@
-[ User ] → Internet → [ DNS resolves www.foobar.com → 8.8.8.8 ]
-
-
-    ↓
+                            User
+                                ↓
+                            Internet
+                                ↓
+                    DNS resolves www.foobar.com
+                                ↓
                     ┌──────────────────────────┐
                     │         SERVER           │ (IP: 8.8.8.8)
                     │                          │
@@ -12,7 +14,7 @@
                     │           ↓              │
                     │   ┌──────────────────┐   │
                     │   │  Application     │   │  ← Application Server
-                    │   │     Server       │   │  (PHP, Python, etc.)
+                    │   │     Server       │   │  
                     │   └──────────────────┘   │
                     │           ↓              │
                     │   ┌──────────────────┐   │
